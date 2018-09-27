@@ -276,7 +276,21 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	for (int vertexPoint = 1; vertexPoint <= a_nSubdivisions; vertexPoint++)
+	{
+		//X and Y values of the vertexPoint one of this triangle
+		float x1 = a_fRadius * cos((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+		float y1 = a_fRadius * sin((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint two of this triangle
+		//Using modulus so I don't have to check and reset vertexPoint back to 1
+		float x2 = a_fRadius * cos((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+		float y2 = a_fRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+
+		//Creating a circular bottom cap that all connects to a top point 
+		AddTri(vector3(0, 0, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2));
+		AddTri(vector3(0, 0, a_fHeight/2), vector3(x2, y2, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2));
+	}
 	// -------------------------------
 
 	// Adding information about color
@@ -300,7 +314,25 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
+	for (int vertexPoint = 1; vertexPoint <= a_nSubdivisions; vertexPoint++)
+	{
+		//X and Y values of the vertexPoint one of this triangle
+		float x1 = a_fRadius * cos((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+		float y1 = a_fRadius * sin((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint two of this triangle
+		//Using modulus so I don't have to check and reset vertexPoint back to 1
+		float x2 = a_fRadius * cos((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+		float y2 = a_fRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+
+		//Creating a circle for the top and bottom caps
+		AddTri(vector3(0, 0, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2));
+		AddTri(vector3(0, 0, a_fHeight/2), vector3(x1, y1, a_fHeight/2), vector3(x2, y2, a_fHeight/2));
+
+		//Creating quads to connect the top and bottom caps
+		AddQuad(vector3(x1, y1, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2), vector3(x1, y1, a_fHeight/2), vector3(x2, y2, a_fHeight/2));
+	}
+	
 	// -------------------------------
 
 	// Adding information about color
@@ -330,7 +362,35 @@ void MyMesh::GenerateTube(float a_fOuterRadius, float a_fInnerRadius, float a_fH
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fOuterRadius * 2.0f, a_v3Color);
+	for (int vertexPoint = 1; vertexPoint <= a_nSubdivisions; vertexPoint++)
+	{
+		//X and Y values of the vertexPoint one of the outer portion
+		float x1Outer = a_fOuterRadius * cos((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+		float y1Outer = a_fOuterRadius * sin((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint two of the outer portion
+		//Using modulus so I don't have to check and reset vertexPoint back to 1
+		float x2Outer = a_fOuterRadius * cos((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+		float y2Outer = a_fOuterRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint one of the inner portion
+		float x1Inner = a_fInnerRadius * cos((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+		float y1Inner = a_fInnerRadius * sin((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint two of the inner portion
+		//Using modulus so I don't have to check and reset vertexPoint back to 1
+		float x2Inner = a_fInnerRadius * cos((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+		float y2Inner = a_fInnerRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+
+
+		//Creating the top and bottom portions of the tube using quads
+		AddQuad(vector3(x2Outer, y2Outer, -a_fHeight/2), vector3(x1Outer, y1Outer, -a_fHeight / 2), vector3(x2Inner, y2Inner, -a_fHeight / 2), vector3(x1Inner, y1Inner, -a_fHeight / 2));
+		AddQuad(vector3(x1Outer, y1Outer, a_fHeight/2), vector3(x2Outer, y2Outer, a_fHeight/2), vector3(x1Inner, y1Inner, a_fHeight/2), vector3(x2Inner, y2Inner, a_fHeight/2));
+
+		//Creating the inner and outer walls of the tube
+		AddQuad(vector3(x1Outer, y1Outer, -a_fHeight/2), vector3(x2Outer, y2Outer, -a_fHeight/2), vector3(x1Outer, y1Outer, a_fHeight/2), vector3(x2Outer, y2Outer, a_fHeight/2));
+		AddQuad(vector3(x2Inner, y2Inner, -a_fHeight/2), vector3(x1Inner, y1Inner, -a_fHeight/2), vector3(x2Inner, y2Inner, a_fHeight/2), vector3(x1Inner, y1Inner, a_fHeight/2));
+	}
 	// -------------------------------
 
 	// Adding information about color
@@ -387,8 +447,24 @@ void MyMesh::GenerateSphere(float a_fRadius, int a_nSubdivisions, vector3 a_v3Co
 	Init();
 
 	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
-	// -------------------------------
+	for (int vertexPoint = 1; vertexPoint <= a_nSubdivisions; vertexPoint++)
+	{
+		//X and Y values of the vertexPoint one of this triangle
+		float x1 = a_fRadius * cos((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+		float y1 = a_fRadius * sin((vertexPoint * 2 * (float)PI) / a_nSubdivisions);
+
+		//X and Y values of the vertexPoint two of this triangle
+		//Using modulus so I don't have to check and reset vertexPoint back to 1
+		float x2 = a_fRadius * cos((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+		float y2 = a_fRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
+
+		//Creating the connecting bottom and top poles of the sphere
+		AddTri(vector3(0, 0, -a_fRadius), vector3(x2, y2, -a_fRadius / 2), vector3(x1, y1, -a_fRadius / 2));
+		AddTri(vector3(0, 0, a_fRadius), vector3(x1, y1, a_fRadius / 2), vector3(x2, y2, a_fRadius / 2));
+
+		//Connecting the center of the sphere
+		AddQuad(vector3(x1, y1, -a_fRadius / 2), vector3(x2, y2, -a_fRadius / 2), vector3(x1, y1, a_fRadius / 2), vector3(x2, y2, a_fRadius / 2));
+	}
 
 	// Adding information about color
 	CompleteMesh(a_v3Color);
