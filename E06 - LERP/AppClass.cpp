@@ -52,29 +52,25 @@ void Application::Display(void)
 	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
 
 	//calculate the current position
-	vector3 v3CurrentPos;
+	vector3 v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);
 
-	int index = 0;
-	static float fPercent = 0.f;
-	vector3 initialPoint = m_stopsList[index++];
-	vector3 endPoint = m_stopsList[index++];
-	vector3 position = glm::lerp(initialPoint, endPoint, fPercent);
+	vector3 initialPoint = m_stopsList[mFirstIndex];
+	vector3 endPoint = m_stopsList[mSecondIndex];
+	vector3 position = glm::lerp(initialPoint, endPoint, mFPercent);
 	matrix4 m4Position = glm::translate(IDENTITY_M4, position);
 
-	if (fPercent >= 1.f)
+	if (mFPercent >= 1.f)
 	{
-		fPercent = 0.f;
-		initialPoint = endPoint;
-		endPoint = m_stopsList[index++];
+		mFPercent = 0.f;
+		mFirstIndex++;
+		mSecondIndex++;
+
+		if (mFirstIndex == m_stopsList.size())
+		{ mFirstIndex = 0; }
+		if (mSecondIndex == m_stopsList.size())
+		{ mSecondIndex = 0; }
 	}
-	fPercent += .01f;
-
-	//your code goes here
-	v3CurrentPos = vector3(0.0f, 0.0f, 0.0f);
-	//-------------------
-	
-
-
+	mFPercent += .01f;
 	
 	matrix4 m4Model = glm::translate(v3CurrentPos);
 	m_pModel->SetModelMatrix(m4Position);

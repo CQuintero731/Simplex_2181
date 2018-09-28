@@ -12,7 +12,7 @@ Date: 2017/05
 
 class Application
 {
-	String m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
+	String m_sProgrammer = "Christopher Quintero - ctq6891@rit.edu";
 	std::vector<vector3> m_stopsList;
 	Simplex::Model* m_pModel = nullptr;
 private:
@@ -37,6 +37,9 @@ private:
 	ControllerInput* m_pController[8]; //Controller
 	uint m_uActCont = 0; //Active Controller of the Application
 
+	int mFirstIndex = 0;
+	int mSecondIndex = 1;
+	float mFPercent = 0.f;
 public:
 #pragma region Constructor / Run / Destructor
 	/*
