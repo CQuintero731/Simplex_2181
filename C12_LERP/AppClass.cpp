@@ -46,9 +46,13 @@ void Application::Display(void)
 
 	//Sol2
 	//Get a timer
-	static float fTimer = 0;	//store the new timer
-	static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
-	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
+	static DWORD startTime = GetTickCount();
+	DWORD currentTime = GetTickCount();
+	DWORD delta = currentTime - startTime;
+	float fTimer = delta / 1000.f;
+	//static float fTimer = 0;	//store the new timer
+	//static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
+	//fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
 
 	//Calculate list of Stops
 	static std::vector<vector3> v3Stop;
@@ -81,7 +85,8 @@ void Application::Display(void)
 	if (fPercentage >= 1.0f)
 	{
 		route++; //go to the next route
-		fTimer = m_pSystem->GetDeltaTime(uClock);//restart the clock
+		startTime = GetTickCount();
+		//fTimer = m_pSystem->GetDeltaTime(uClock);//restart the clock
 		route %= v3Stop.size();//make sure we are within boundries
 	}
 		
