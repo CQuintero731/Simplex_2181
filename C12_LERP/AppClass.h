@@ -39,6 +39,8 @@ private:
 	ControllerInput* m_pController[8]; //Controller
 	uint m_uActCont = 0; //Active Controller of the Application
 
+	vector3 m_v3Angles = vector3(0.f, 0.f, 0.f);
+
 public:
 #pragma region Constructor / Run / Destructor
 	/*

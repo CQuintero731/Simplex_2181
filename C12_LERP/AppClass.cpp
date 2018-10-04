@@ -7,7 +7,7 @@ void Application::InitVariables(void)
 	
 	//init the mesh
 	m_pMesh = new MyMesh();
-	m_pMesh->GenerateCone(0.5f, 1.0f, 5, C_WHITE);
+	m_pMesh->GenerateCone(0.5f, 1.0f, 3, C_WHITE);
 }
 void Application::Update(void)
 {
@@ -66,32 +66,51 @@ void Application::Display(void)
 		bInit = true;
 	}
 
-	vector3 v3Start; //start point
-	vector3 v3End; //end point
+	vector3 v3Start = vector3(0.0f, 0.0f, 0.0f);; //start point
+	vector3 v3End = vector3(5.0f, 0.0f, 0.0f); //end point
 	static uint route = 0; //current route
-	v3Start = v3Stop[route]; //start at the current route
-	v3End = v3Stop[(route + 1) % v3Stop.size()]; //end at route +1 (if overboard will restart from 0)
+	//v3Start = v3Stop[route]; //start at the current route
+	//v3End = v3Stop[(route + 1) % v3Stop.size()]; //end at route +1 (if overboard will restart from 0)
 	
 	//get the percentace
-	float fTimeBetweenStops = 2.0;//in seconds
+	float fTimeBetweenStops = 1.0;//in seconds
 	//map the value to be between 0.0 and 1.0
 	float fPercentage = MapValue(fTimer, 0.0f, fTimeBetweenStops, 0.0f, 1.0f);
 
-	//calculate the current position
-	vector3 v3CurrentPos = glm::lerp(v3Start, v3End, fPercentage);
-	matrix4 m4Model = glm::translate(IDENTITY_M4, v3CurrentPos);
+	static float fStart = 0.0f;
+	static float fEnd = 180.0f;
 
-	//if we are done with this route
-	if (fPercentage >= 1.0f)
-	{
-		route++; //go to the next route
-		startTime = GetTickCount();
-		//fTimer = m_pSystem->GetDeltaTime(uClock);//restart the clock
-		route %= v3Stop.size();//make sure we are within boundries
-	}
+	//calculate the current position
+	float fCurrent = glm::lerp(fStart, fEnd, fPercentage);
+	vector3 v3CurrentPos = glm::lerp(v3Start, v3End, fPercentage);
+	matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians(fCurrent), AXIS_Z);
+	matrix4 m4Model = glm::translate(m4Rotation, v3End);
+	m4Model = glm::translate(vector3(0.f));
+
+	//New Matrix Transformation
+	matrix4 m4RotX = glm::rotate(IDENTITY_M4, glm::radians(m_v3Angles.x), AXIS_X);
+	matrix4 m4RotY = glm::rotate(IDENTITY_M4, glm::radians(m_v3Angles.y), AXIS_Y);
+	matrix4 m4RotZ = glm::rotate(IDENTITY_M4, glm::radians(m_v3Angles.z), AXIS_Z);
+	matrix4 m4Transform = m4RotX * m4RotY * m4RotZ;
+
+	glm::quat q1;
+	quaternion q2 = glm::angleAxis(glm::radians(1.f), AXIS_Z);
+	static glm::quat q3;
+	q3 *= q2;
+	////if we are done with this route
+	//if (fPercentage >= 1.0f)
+	//{
+	//	route++; //go to the next route
+	//	startTime = GetTickCount();
+	//	//fTimer = m_pSystem->GetDeltaTime(uClock);//restart the clock
+	//	route %= v3Stop.size();//make sure we are within boundries
+	//}
 		
 	// render the object
-	m_pMesh->Render(m4Projection, m4View, m4Model);
+	//m_pMesh->Render(m4Projection, m4View, m4Transform);
+	m_pMesh->Render(m4Projection, m4View, ToMatrix4(q3));
+
+	//m_v3Angles = vector3(fTimer * 45.f);
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
