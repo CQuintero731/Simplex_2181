@@ -28,7 +28,11 @@ void Application::Display(void)
 	m_m4Model = glm::rotate(IDENTITY_M4, glm::radians(m_v3Rotation.x), vector3(1.0f, 0.0f, 0.0f));
 	m_m4Model = glm::rotate(m_m4Model, glm::radians(m_v3Rotation.y), vector3(0.0f, 1.0f, 0.0f));
 	m_m4Model = glm::rotate(m_m4Model, glm::radians(m_v3Rotation.z), vector3(0.0f, 0.0f, 1.0f));
-	m_pMesh->Render(m4Projection, m4View, ToMatrix4(m_m4Model));
+
+	//Creating a quaternion to avoid gimbal lock, rotation is now toggled rather than press to hold
+	//To stop rotation press "R", will need to be pressed in order to check each axis rotation one by one
+	m_qOrientation = m_qOrientation * glm::normalize(glm::angleAxis(glm::radians(1.f), vector3(m_v3Rotation.x, m_v3Rotation.y, m_v3Rotation.z)));
+	m_pMesh->Render(m4Projection, m4View, ToMatrix4(m_qOrientation));
 
 	//m_qOrientation = m_qOrientation * glm::angleAxis(glm::radians(1.0f), vector3(1.0f));
 	//m_pMesh->Render(m4Projection, m4View, ToMatrix4(m_qOrientation));

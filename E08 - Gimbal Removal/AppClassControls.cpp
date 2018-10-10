@@ -414,26 +414,28 @@ void Application::ProcessKeyboard(void)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
 		m_pCameraMngr->MoveVertical(fSpeed);
 #pragma endregion
+	//Since x, y, and z are used as directions with quaternions, set to 1 or -1 if pressed, rotation now acts as a toggle rather than press to hold
+	//Pressing R simply stops rotation, doesn't fully reset
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
 	{
 		if (fMultiplier)
-			m_v3Rotation.x -= 1.0f;
+			m_v3Rotation.x = -1.0f;
 		else
-			m_v3Rotation.x += 1.0f;
+			m_v3Rotation.x = 1.0f;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y))
 	{
 		if (fMultiplier)
-			m_v3Rotation.y -= 1.0f;
+			m_v3Rotation.y = -1.0f;
 		else
-			m_v3Rotation.y += 1.0f;
+			m_v3Rotation.y = 1.0f;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
 	{
 		if (fMultiplier)
-			m_v3Rotation.z -= 1.0f;
+			m_v3Rotation.z = -1.0f;
 		else
-			m_v3Rotation.z += 1.0f;
+			m_v3Rotation.z = 1.0f;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 	{
