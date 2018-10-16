@@ -43,6 +43,8 @@ private:
 	ControllerInput* m_pController[8]; //Controller
 	uint m_uActCont = 0; //Active Controller of the Application
 
+	MyMesh* m_pMesh = nullptr;
+
 public:
 #pragma region Constructor / Run / Destructor
 	/*
