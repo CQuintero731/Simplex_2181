@@ -45,6 +45,12 @@ void Application::Display(void)
 	//draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
 
+	matrix4 view = m_pCameraMngr->GetViewMatrix();
+	matrix4 proj = m_pCameraMngr->GetProjectionMatrix();
+
+	//Orthographic view
+	//proj = glm::ortho(0.f, 2.f, 0.f, 2.f, 0.01f, 20.f);
+
 	//calculate view and projection
 	switch (m_uProjection)
 	{
@@ -53,22 +59,25 @@ void Application::Display(void)
 		m_pCamera->ResetCamera();
 		break;
 	case 2:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetPerspective(false);
 		break;
 	case 3:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetPosition(vector3(25.f, 0.f, 0.f));
+		m_pCamera->SetUp(vector3(0.f, 0.f, -1.f));
 		break;
 	case 4:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetPosition(vector3(0.f, 0.f, -15.f));
 		break;
 	case 5:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetPosition(vector3(0.f, 0.f, -15.f));
+		m_pCamera->SetNearFar(vector2(6.f, 1000.f));
 		break;
 	case 6:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetPosition(vector3(0.f, 0.f, -15.f));
+		m_pCamera->SetNearFar(vector2(.001f, 12.f));
 		break;
 	case 7:
-		m_pCamera->ResetCamera();
+		m_pCamera->SetUp(vector3(0.f, -1.f, 0.f));
 		break;
 	}
 
@@ -91,6 +100,9 @@ void Application::Display(void)
 	
 	//end the current frame (internally swaps the front and back buffers)
 	m_pWindow->display();
+
+	//Reset the camera each time
+	m_pCamera->ResetCamera();
 }
 void Application::Release(void)
 {
