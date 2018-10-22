@@ -288,8 +288,8 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 		float y2 = a_fRadius * sin((((vertexPoint % a_nSubdivisions) + 1) * 2 * (float)PI) / a_nSubdivisions);
 
 		//Creating a circular bottom cap that all connects to a top point 
-		AddTri(vector3(0, 0, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2));
-		AddTri(vector3(0, 0, a_fHeight/2), vector3(x2, y2, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2));
+		AddTri(vector3(0, 0, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2), vector3(x1, y1, -a_fHeight/2));
+		AddTri(vector3(0, 0, a_fHeight/2), vector3(x1, y1, -a_fHeight/2), vector3(x2, y2, -a_fHeight/2));
 	}
 	// -------------------------------
 
