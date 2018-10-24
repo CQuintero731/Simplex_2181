@@ -20,9 +20,6 @@ class MyCamera
 	vector3 mUpward = vector3(0.f, 1.f, 0.f);
 	vector3 mRightward = vector3(1.f, 0.f, 0.f);
 
-	quaternion mYaw;
-	quaternion mPitch;
-
 	bool m_bPerspective = true; //perspective view? False is Orthographic
 
 	float m_fFOV = 45.0f; //Field of View
