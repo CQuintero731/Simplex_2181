@@ -152,11 +152,61 @@ void Simplex::MyCamera::CalculateProjectionMatrix(void)
 
 void MyCamera::MoveForward(float a_fDistance)
 {
-	//The following is just an example and does not take in account the forward vector (AKA view vector)
-	m_v3Position += vector3(0.0f, 0.0f,-a_fDistance);
-	m_v3Target += vector3(0.0f, 0.0f, -a_fDistance);
-	m_v3Above += vector3(0.0f, 0.0f, -a_fDistance);
+	//Moves the camera along the Z axis
+	m_v3Position += mForward * a_fDistance;//Adjusting the position
+	m_v3Target += mForward * a_fDistance;//and ensuring the view stays leveled and doesn't rotate
+	m_v3Above += mForward * a_fDistance;//Adjusting above
+
+	//Recalculating the forward, up, and right vector for line of view movement
+	mForward = glm::normalize(m_v3Target - m_v3Position);
+	mUpward = glm::normalize(m_v3Above - m_v3Position);
+	mRightward = glm::normalize(glm::cross(mForward, mUpward));
 }
 
-void MyCamera::MoveVertical(float a_fDistance){}//Needs to be defined
-void MyCamera::MoveSideways(float a_fDistance){}//Needs to be defined
+void MyCamera::MoveVertical(float a_fDistance)
+{
+	//Moves the camera along the Y axis
+	m_v3Position += mUpward * -a_fDistance;//Adjusting the position
+	m_v3Target += mUpward * -a_fDistance;//and ensuring the view stays leveled and doesn't rotate
+	m_v3Above += mUpward * -a_fDistance;//Adjusting above
+
+	//Recalculating the forward, up, and right vector for line of view movement
+	mForward = glm::normalize(m_v3Target - m_v3Position);
+	mUpward = glm::normalize(m_v3Above - m_v3Position);
+	mRightward = glm::normalize(glm::cross(mForward, mUpward));
+}
+
+void MyCamera::MoveSideways(float a_fDistance)
+{
+	//Moves the camera along the X axis
+	m_v3Position += mRightward * -a_fDistance;//Adjusting the position
+	m_v3Target += mRightward * -a_fDistance;//and ensuring the view stays leveled and doesn't rotate
+	m_v3Above += mRightward * -a_fDistance;//Adjusting above
+
+	//Recalculating the forward, up, and right vector for line of view movement
+	mForward = glm::normalize(m_v3Target - m_v3Position);
+	mUpward = glm::normalize(m_v3Above - m_v3Position);
+	mRightward = glm::normalize(glm::cross(mForward, mUpward));
+}
+
+void MyCamera::ChangePitch(float a_fDegree)
+{
+	m_v3Target += vector3(0.f, a_fDegree, 0.f);//Adjusting the target up or down based on the degree of movement
+
+	//Recalculating the forward, up, and right vector for line of view movement
+	mForward = glm::normalize(m_v3Target - m_v3Position);
+	mUpward = glm::normalize(m_v3Above - m_v3Position);
+	mRightward = glm::normalize(glm::cross(mForward, mUpward));
+}
+
+void MyCamera::ChangeYaw(float a_fDegree)
+{
+	quaternion q = glm::normalize(glm::angleAxis(a_fDegree, vector3(0.f, 1.f, 0.f)));//Rotation around the y-axis to move left/right based on the degree of movement
+
+	m_v3Target = m_v3Position + (q * mForward);//Changing the target based on the quaternion rotation
+
+	//Recalculating the forward, up, and right vector for line of view movement
+	mForward = glm::normalize(m_v3Target - m_v3Position);
+	mUpward = glm::normalize(m_v3Above - m_v3Position);
+	mRightward = glm::normalize(glm::cross(mForward, mUpward));
+}

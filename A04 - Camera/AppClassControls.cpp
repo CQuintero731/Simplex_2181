@@ -368,7 +368,11 @@ void Application::CameraRotation(float a_fSpeed)
 		fDeltaMouse = static_cast<float>(MouseY - CenterY);
 		fAngleX += fDeltaMouse * a_fSpeed;
 	}
+
 	//Change the Yaw and the Pitch of the camera
+	m_pCamera->ChangePitch(-fAngleX * 0.25f);
+	m_pCamera->ChangeYaw(fAngleY * 0.25f);
+
 	SetCursorPos(CenterX, CenterY);//Position the mouse in the center
 }
 //Keyboard
@@ -390,6 +394,16 @@ void Application::ProcessKeyboard(void)
 		m_pCamera->MoveForward(fSpeed);
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		m_pCamera->MoveForward(-fSpeed);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		m_pCamera->MoveSideways(fSpeed);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		m_pCamera->MoveSideways(-fSpeed);
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+		m_pCamera->MoveVertical(fSpeed);
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+		m_pCamera->MoveVertical(-fSpeed);
 #pragma endregion
 }
 //Joystick
