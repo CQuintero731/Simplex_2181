@@ -85,8 +85,49 @@ void MyRigidBody::SetModelMatrix(matrix4 a_m4ModelMatrix)
 	m_m4ToWorld = a_m4ModelMatrix;
 	
 	//your code goes here---------------------
-	m_v3MinG = m_v3MinL;
-	m_v3MaxG = m_v3MaxL;
+	//Get the 8 corners from the localized cube bounding box
+	std::vector<vector3> cubeCorners;
+
+	cubeCorners.push_back(m_v3MinL);
+	cubeCorners.push_back(vector3(m_v3MaxL.x, m_v3MinL.y, m_v3MinL.z));
+	cubeCorners.push_back(vector3(m_v3MinL.x, m_v3MaxL.y, m_v3MinL.z));
+	cubeCorners.push_back(vector3(m_v3MaxL.x, m_v3MaxL.y, m_v3MinL.z));
+
+	cubeCorners.push_back(vector3(m_v3MinL.x, m_v3MinL.y, m_v3MaxL.z));
+	cubeCorners.push_back(vector3(m_v3MaxL.x, m_v3MinL.y, m_v3MaxL.z));
+	cubeCorners.push_back(vector3(m_v3MinL.x, m_v3MaxL.y, m_v3MaxL.z));
+	cubeCorners.push_back(m_v3MaxL);
+
+	//Set the corners of the box from local to global
+	for (uint i = 0; i < cubeCorners.size(); i++)
+	{
+		cubeCorners[i] = vector3(m_m4ToWorld * vector4(cubeCorners[i], 1.0f));
+	}
+
+	//Set the min and max global coords as the first corner in the list
+	m_v3MaxG = m_v3MinG = cubeCorners[0];
+
+	//Find the min and max global coords by looping through the cubeCorners list
+	for (uint i = 1; i < cubeCorners.size(); i++)
+	{
+		//Setting the min/max x value
+		if (cubeCorners[i].x < m_v3MinG.x)
+			m_v3MinG.x = cubeCorners[i].x;
+		else if (cubeCorners[i].x > m_v3MaxG.x)
+			m_v3MaxG.x = cubeCorners[i].x;
+
+		//Setting the min/max y value
+		if (cubeCorners[i].y < m_v3MinG.y)
+			m_v3MinG.y = cubeCorners[i].y;
+		else if (cubeCorners[i].y > m_v3MaxG.y)
+			m_v3MaxG.y = cubeCorners[i].y;
+
+		//Setting the min/max z value
+		if (cubeCorners[i].z < m_v3MinG.z)
+			m_v3MinG.z = cubeCorners[i].z;
+		else if (cubeCorners[i].z > m_v3MaxG.z)
+			m_v3MaxG.z = cubeCorners[i].z;
+	}
 	//----------------------------------------
 
 	//we calculate the distance between min and max vectors
