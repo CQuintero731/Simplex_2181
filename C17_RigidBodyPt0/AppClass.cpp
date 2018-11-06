@@ -49,24 +49,21 @@ void Application::Update(void)
 	m_pSteve->SetModelMatrix(mSteve);
 	m_pSteveRB->SetModelMatrix(mSteve);
 	
-	m_pCreeper->AddToRenderList();
-	//m_pCreeper->PlaySequence();
-	m_pCreeperRB->AddToRenderList();
-
-	m_pSteve->AddToRenderList();
-	m_pSteveRB->AddToRenderList();
+	m_pCreeperRB->SetColor(C_WHITE);
+	m_pSteveRB->SetColor(C_WHITE);
 
 	if (m_pCreeperRB->IsColliding(m_pSteveRB))
 	{
 		m_pCreeperRB->SetColor(C_RED);
 		m_pSteveRB->SetColor(C_RED);
 	}
-	else
-	{
-		m_pCreeperRB->SetColor(C_WHITE);
-		m_pSteveRB->SetColor(C_WHITE);
-	}
-		
+
+	m_pCreeper->AddToRenderList();
+	//m_pCreeper->PlaySequence();
+	m_pCreeperRB->AddToRenderList();
+
+	m_pSteve->AddToRenderList();
+	m_pSteveRB->AddToRenderList();
 }
 void Application::Display(void)
 {
