@@ -56,10 +56,17 @@ void Application::Display(void)
 	ClearScreen();
 
 	//Display octree
-	if (m_uOctantID == -1)//If the ID is -1 Display normally
-		m_pRoot->Display();
-	else//Otherwise display the section
-		m_pRoot->Display(m_uOctantID);
+	if (m_showOctree)
+	{
+		//1 is blank, I could not figure out why so I skip it to avoid seeing no octree render when cycling with PgUp and PgDn
+		if (m_uOctantID == 1)
+			m_uOctantID++;
+
+		if (m_uOctantID == -1)//If the ID is -1 Display normally
+			m_pRoot->Display();
+		else//Otherwise display the section
+			m_pRoot->Display(m_uOctantID);
+	}
 		
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();

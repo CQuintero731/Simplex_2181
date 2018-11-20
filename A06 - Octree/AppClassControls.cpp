@@ -113,12 +113,12 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
-		if (m_uOctantID >= m_pRoot->GetOctantCount())
+		if (m_uOctantID > m_pRoot->GetOctantCount())//Because the 1 index is empty, there is an extra index so I just use > instead of >=
 			m_uOctantID = -1;
 		break;
 	case sf::Keyboard::PageDown:
 		--m_uOctantID;
-		if (m_uOctantID >= m_pRoot->GetOctantCount())
+		if (m_uOctantID > m_pRoot->GetOctantCount())//Because the 1 index is empty, there is an extra index so I just use > instead of >=
 			m_uOctantID = -1;
 		break;
 	case sf::Keyboard::Add:
@@ -131,6 +131,9 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 			SafeDelete(m_pRoot);
 			m_pRoot = new MyOctant(m_uOctantLevels, 5);
 		}
+		break;
+	case sf::Keyboard::P:
+		m_showOctree = !m_showOctree;
 		break;
 	case sf::Keyboard::Subtract:
 		if (m_uOctantLevels > 0)

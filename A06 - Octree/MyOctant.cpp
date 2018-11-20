@@ -48,7 +48,7 @@ Simplex::MyOctant::MyOctant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 	mSize = maxVal * 2.0f;
 	mMin = mCenter - vector3(maxVal);
 	mMax = mCenter + vector3(maxVal);
-
+	mOctantCount++;
 	ConstructTree(mMaxLevel);
 }
 Simplex::MyOctant::MyOctant(vector3 a_v3Center, float a_fSize)
