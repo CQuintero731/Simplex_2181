@@ -13,30 +13,30 @@ namespace Simplex
 //System Class
 class MyOctant
 {
-	static uint m_uOctantCount; //will store the number of octants instantiated
-	static uint m_uMaxLevel;//will store the maximum level an octant can go to
-	static uint m_uIdealEntityCount; //will tell how many ideal Entities this object will contain
+	static uint mOctantCount; //will store the number of octants instantiated
+	static uint mMaxLevel;//will store the maximum level an octant can go to
+	static uint mIdealEntityCount; //will tell how many ideal Entities this object will contain
 
-	uint m_uID = 0; //Will store the current ID for this octant
-	uint m_uLevel = 0; //Will store the current level of the octant
-	uint m_uChildren = 0;// Number of children on the octant (either 0 or 8)
+	uint mID = 0; //Will store the current ID for this octant
+	uint mLevel = 0; //Will store the current level of the octant
+	uint mChildren = 0;// Number of children on the octant (either 0 or 8)
 
-	float m_fSize = 0.0f; //Size of the octant
+	float mSize = 0.0f; //Size of the octant
 
-	MeshManager* m_pMeshMngr = nullptr;//Mesh Manager singleton
-	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager Singleton
+	MeshManager* mMeshMngr = nullptr;//Mesh Manager singleton
+	MyEntityManager* mEntityMngr = nullptr; //Entity Manager Singleton
 
-	vector3 m_v3Center = vector3(0.0f); //Will store the center point of the octant
-	vector3 m_v3Min = vector3(0.0f); //Will store the minimum vector of the octant
-	vector3 m_v3Max = vector3(0.0f); //Will store the maximum vector of the octant
+	vector3 mCenter = vector3(0.f); //Will store the center point of the octant
+	vector3 mMin = vector3(0.f); //Will store the minimum vector of the octant
+	vector3 mMax = vector3(0.f); //Will store the maximum vector of the octant
 	
-	MyOctant* m_pParent = nullptr;// Will store the parent of current octant
-	MyOctant* m_pChild[8];//Will store the children of the current octant
+	MyOctant* mParent = nullptr;// Will store the parent of current octant
+	MyOctant* mChildArray[8];//Will store the children of the current octant
 
-	std::vector<uint> m_EntityList; //List of Entities under this octant (Index in Entity Manager)
+	std::vector<uint> mEntityList; //List of Entities under this octant (Index in Entity Manager)
 
-	MyOctant* m_pRoot = nullptr;//Root octant
-	std::vector<MyOctant*> m_lChild; //list of nodes that contain objects (this will be applied to root only)
+	MyOctant* mRoot = nullptr;//Root octant
+	std::vector<MyOctant*> mChildList; //list of nodes that contain objects (this will be applied to root only)
 	
 public:
 	/*
@@ -88,24 +88,6 @@ public:
 	*/
 	float GetSize(void);
 	/*
-	USAGE: Gets the center of the octant in global scape
-	ARGUMENTS: ---
-	OUTPUT: Center of the octant in global space
-	*/
-	vector3 GetCenterGlobal(void);
-	/*
-	USAGE: Gets the min corner of the octant in global space
-	ARGUMENTS: ---
-	OUTPUT: Minimum in global space
-	*/
-	vector3 GetMinGlobal(void);
-	/*
-	USAGE: Gets the max corner of the octant in global space
-	ARGUMENTS: ---
-	OUTPUT: Maximum in global space
-	*/
-	vector3 GetMaxGlobal(void);
-	/*
 	USAGE: Asks if there is a collision with the Entity specified by index from
 	the Bounding Object Manager
 	ARGUMENTS:
@@ -129,13 +111,6 @@ public:
 	*/
 	void Display(vector3 a_v3Color = C_YELLOW);
 	/*
-	USAGE: Displays the non empty leafs in the octree
-	ARGUMENTS:
-	- vector3 a_v3Color = REYELLOW -> Color of the volume to display.
-	OUTPUT: ---
-	*/
-	void DisplayLeafs(vector3 a_v3Color = C_YELLOW);
-	/*
 	USAGE: Clears the Entity list for each node
 	ARGUMENTS: ---
 	OUTPUT: ---
@@ -147,18 +122,6 @@ public:
 	OUTPUT: ---
 	*/
 	void Subdivide(void);
-	/*
-	USAGE: returns the child specified in the index
-	ARGUMENTS: uint a_nChild -> index of the child (from 0 to 7)
-	OUTPUT: MyOctant object (child in index)
-	*/
-	MyOctant* GetChild(uint a_nChild);
-	/*
-	USAGE: returns the parent of the octant
-	ARGUMENTS: ---
-	OUTPUT: MyOctant object (parent)
-	*/
-	MyOctant* GetParent(void);
 	/*
 	USAGE: Asks the MyOctant if it does not contain any children (its a leaf)
 	ARGUMENTS: ---
@@ -191,7 +154,6 @@ public:
 	OUTPUT: ---
 	*/
 	void AssignIDtoEntity(void);
-
 	/*
 	USAGE: Gets the total number of octants in the world
 	ARGUMENTS: ---
